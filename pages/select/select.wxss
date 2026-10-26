@@ -1,0 +1,299 @@
+page {
+  padding-bottom: 200rpx;
+}
+
+/* ---------- 页面信息 ---------- */
+.topbar {
+  padding: 24rpx 32rpx 24rpx;
+}
+
+.topbar__title {
+  font-size: 38rpx;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.4rpx;
+}
+
+.topbar__sub {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--ink-3);
+}
+
+.topbar__count {
+  margin-top: 14rpx;
+  font-size: 24rpx;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 2rpx;
+}
+
+.topbar-action {
+  margin-left: 12rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 999rpx;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 23rpx;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.topbar-action--muted {
+  background: var(--surface-3);
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.topbar-action:active {
+  opacity: 0.65;
+}
+
+.tip {
+  margin-top: 18rpx;
+  font-size: 22rpx;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+
+/* ---------- 周切换 ---------- */
+.week-tabs {
+  display: flex;
+  margin-top: 22rpx;
+  padding: 6rpx;
+  background: var(--surface-3);
+  border-radius: 14rpx;
+}
+
+.week-tab {
+  flex: 1;
+  padding: 14rpx 0;
+  border-radius: 10rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.week-tab.is-active {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 2rpx 10rpx rgba(26, 32, 46, 0.08);
+}
+
+/* ---------- 网格 ---------- */
+.cal {
+  margin: 4rpx 24rpx 0;
+  background: var(--surface);
+  border-radius: 22rpx;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.cal-head {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--cal-head);
+  border-radius: 22rpx 22rpx 0 0;
+  padding-top: 18rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.cal-head__gutter {
+  width: 84rpx;
+  flex-shrink: 0;
+}
+
+.cal-head__days {
+  flex: 1;
+  display: flex;
+}
+
+.day-head {
+  flex: 1;
+  padding: 6rpx 0 14rpx;
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.day-head:active {
+  background: var(--surface-hover);
+}
+
+.day-head__week {
+  display: block;
+  font-size: 20rpx;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.day-head__num {
+  display: block;
+  margin-top: 2rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.day-head.is-active .day-head__num {
+  color: var(--brand);
+}
+
+.day-head__bar {
+  width: 26rpx;
+  height: 4rpx;
+  margin: 8rpx auto 0;
+  border-radius: 4rpx;
+  background: transparent;
+}
+
+.day-head.is-active .day-head__bar {
+  background: var(--brand-soft);
+}
+
+.day-head__bar.is-full {
+  width: 38rpx;
+  background: var(--brand);
+}
+
+.cal-body {
+  display: flex;
+}
+
+.cal-gutter {
+  width: 84rpx;
+  flex-shrink: 0;
+  border-right: 1rpx solid var(--line);
+}
+
+.time-label {
+  height: 40rpx;
+  position: relative;
+}
+
+.time-label:active {
+  background: var(--surface-hover);
+}
+
+.time-label__text {
+  position: absolute;
+  top: -2rpx;
+  right: 14rpx;
+  font-size: 20rpx;
+  line-height: 26rpx;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.cal-grid {
+  flex: 1;
+  display: flex;
+  border-left: 1rpx solid var(--line);
+}
+
+.day-col {
+  flex: 1;
+  border-right: 1rpx solid var(--line);
+}
+
+.day-col:last-child {
+  border-right: 0;
+}
+
+.cell {
+  height: 40rpx;
+  margin: 0 1rpx;
+  border-bottom: 1rpx solid var(--border-soft);
+  border-radius: 3rpx;
+  background: var(--surface);
+  transition: background-color 0.12s ease;
+}
+
+.cell.is-hour {
+  border-top: 1rpx solid var(--line-strong);
+}
+
+.cell.is-on {
+  background: var(--brand);
+  border-bottom-color: var(--brand);
+  box-shadow: inset 0 0 0 1rpx rgba(79, 70, 229, 0.12);
+}
+
+.cell.is-on.is-hour {
+  border-top-color: var(--brand-dark);
+}
+
+/* ---------- 底部状态 ---------- */
+.save-state {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: var(--ink-3);
+}
+
+.save-state.is-error {
+  color: var(--warn);
+}
+
+.dot {
+  width: 12rpx;
+  height: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+
+.dot.is-ok {
+  background: var(--ok);
+}
+
+.finish-btn {
+  width: 200rpx;
+  flex-shrink: 0;
+}
+
+/* 让“今天”更容易定位 */
+.day-head.is-today .day-head__week {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.error-state {
+  padding: 160rpx 40rpx;
+  text-align: center;
+}
+
+.error-state__text {
+  font-size: 28rpx;
+  color: var(--ink-2);
+}
+
+/* ---------- 深色主题细节 ---------- */
+.theme-dark .cal {
+  border: 2rpx solid var(--line);
+}
+
+.theme-dark .cell {
+  box-shadow: none;
+}
+
+.theme-dark .cell.is-on {
+  background: var(--brand);
+  border-bottom-color: var(--brand);
+  box-shadow: inset 0 0 0 1rpx rgba(255, 255, 255, 0.06);
+}
+
+.theme-dark .week-tab.is-active {
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.35);
+}

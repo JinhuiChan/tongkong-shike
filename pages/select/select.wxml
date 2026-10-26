@@ -1,0 +1,98 @@
+<view class="theme-root {{themeClass}}">
+<view wx:if="{{loading}}" class="loading">加载中…</view>
+
+<view wx:elif="{{error}}" class="error-state">
+  <view class="error-state__text">{{error}}</view>
+  <view class="gap-32"></view>
+  <view class="btn btn--ghost" bindtap="retry">重试</view>
+</view>
+
+<block wx:else>
+  <view class="topbar">
+    <view class="row row--between">
+      <view class="grow">
+        <view class="topbar__title">{{room.title}}</view>
+        <view class="topbar__sub">{{room.rangeText}} · 共 {{room.dayCount}} 天</view>
+      </view>
+      <view class="topbar__actions">
+        <view class="topbar-action" bindtap="selectAll">全选</view>
+        <view class="topbar-action topbar-action--muted" bindtap="clearAll">清空</view>
+      </view>
+    </view>
+
+    <view class="topbar__count">已选 {{selectedCount}} 格 · 每格 15 分钟</view>
+
+    <view wx:if="{{weekTabs.length > 1}}" class="week-tabs">
+      <view
+        class="week-tab {{weekIndex === item.index ? 'is-active' : ''}}"
+        wx:for="{{weekTabs}}"
+        wx:key="index"
+        data-index="{{item.index}}"
+        bindtap="switchWeek"
+      >{{item.label}}</view>
+    </view>
+
+    <view class="tip">点格子切换；点日期选整天，点时间选同一时段。</view>
+  </view>
+
+  <view class="cal">
+    <view class="cal-head">
+      <view class="cal-head__gutter"></view>
+      <view class="cal-head__days">
+        <block wx:for="{{days}}" wx:for-item="day" wx:for-index="di" wx:key="date">
+          <view
+            wx:if="{{day.page === weekIndex}}"
+            class="day-head {{colCounts[di] > 0 ? 'is-active' : ''}} {{day.isToday ? 'is-today' : ''}}"
+            data-di="{{di}}"
+            bindtap="toggleColumn"
+          >
+            <text class="day-head__week">{{day.weekday}}</text>
+            <text class="day-head__num">{{day.dayNum}}</text>
+            <view class="day-head__bar {{colCounts[di] === 96 ? 'is-full' : ''}}"></view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="cal-body">
+      <view class="cal-gutter">
+        <view
+          class="time-label"
+          id="row{{item.index}}"
+          wx:for="{{rows}}"
+          wx:key="index"
+          data-ri="{{item.index}}"
+          bindtap="toggleRow"
+        >
+          <text wx:if="{{item.label}}" class="time-label__text">{{item.label}}</text>
+        </view>
+      </view>
+
+      <view class="cal-grid">
+        <block wx:for="{{days}}" wx:for-item="day" wx:for-index="di" wx:key="date">
+          <view wx:if="{{day.page === weekIndex}}" class="day-col">
+            <view
+              class="cell {{item.on ? 'is-on' : ''}} {{item.i % 4 === 0 ? 'is-hour' : ''}}"
+              wx:for="{{day.cells}}"
+              wx:key="i"
+              data-di="{{di}}"
+              data-ri="{{item.i}}"
+              bindtap="toggleCell"
+            ></view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+</block>
+
+<view class="bottom-bar" wx:if="{{!loading && !error}}">
+  <view class="row row--between">
+    <view class="save-state {{saveState === 'error' ? 'is-error' : ''}}">
+      <view class="dot {{saveState === 'saved' ? 'is-ok' : ''}}"></view>
+      <text>{{saveStateText || '勾选你的空闲时间'}}</text>
+    </view>
+    <view class="btn btn--primary finish-btn" bindtap="finish">完成</view>
+  </view>
+</view>
+</view>

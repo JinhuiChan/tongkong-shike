@@ -1,0 +1,85 @@
+<view class="theme-root {{themeClass}}">
+<view wx:if="{{loading}}" class="loading">正在统计…</view>
+
+<view wx:elif="{{error}}" class="error-state">
+  <view class="error-state__text">{{error}}</view>
+  <view class="gap-32"></view>
+  <view class="btn btn--ghost" bindtap="retry">重试</view>
+</view>
+
+<block wx:else>
+  <view class="head">
+    <view class="row row--between">
+      <text class="label">{{room.title}}</text>
+      <text class="head-link" bindtap="goRoom">房间</text>
+    </view>
+    <view class="head__title">共同空闲</view>
+    <view class="head__sub">{{filledCount}}/{{totalMembers}} 人已填，结果只基于已填的人</view>
+    <view class="head__count" wx:if="{{totalRanges > 0}}">共 {{totalRanges}} 个可约时段</view>
+  </view>
+
+  <view wx:if="{{thresholdOptions.length > 1}}" class="filters">
+    <view
+      class="chip {{threshold === item.value ? 'is-active' : ''}}"
+      wx:for="{{thresholdOptions}}"
+      wx:key="value"
+      data-value="{{item.value}}"
+      bindtap="pickThreshold"
+    >{{item.label}}</view>
+  </view>
+
+  <view wx:if="{{filledCount < 2}}" class="state-card">
+    <view class="state-card__title">还差一个人</view>
+    <view class="state-card__desc">至少要有 2 个人填完，才能算出共同空闲。把房号发到群里吧。</view>
+    <view class="gap-24"></view>
+    <button class="share-btn" open-type="share">分享到群</button>
+  </view>
+
+  <block wx:else>
+    <view wx:if="{{totalRanges === 0}}" class="state-card">
+      <view class="state-card__title">这个条件下没有重叠</view>
+      <view class="state-card__desc">试试放宽到「更少人也算」，或者叫还没填的人补上。</view>
+    </view>
+
+    <view wx:for="{{days}}" wx:key="date" wx:for-item="day">
+      <view wx:if="{{day.ranges.length > 0}}" class="day-block">
+        <view class="day-block__head">
+          <text class="day-block__label">{{day.label}}</text>
+          <text wx:if="{{day.isToday}}" class="today-tag">今天</text>
+        </view>
+        <view class="range" wx:for="{{day.ranges}}" wx:key="text" wx:for-item="range">
+          <view class="range__bar"></view>
+          <view class="grow">
+            <view class="range__time">{{range.text}}</view>
+            <view class="range__meta">{{range.duration}} · {{range.availableCount}} 人全程有空</view>
+            <view class="people">
+              <view class="person" wx:for="{{range.available}}" wx:key="id" wx:for-item="person">
+                <view class="person__dot" style="background:{{person.color}}">{{person.initial}}</view>
+                <text class="person__name">{{person.nickname}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view wx:if="{{filledCount < totalMembers}}" class="pending">
+    <view class="pending__title">还没填的人</view>
+    <view class="pending__list">
+      <view class="pending__item" wx:for="{{pendingMembers}}" wx:key="id">
+        <view class="avatar-sm" style="background:{{item.color}}">{{item.initial}}</view>
+        <text class="pending__name">{{item.nickname}}</text>
+      </view>
+    </view>
+    <view class="pending__hint">催一下他们，结果会更准。</view>
+  </view>
+</block>
+
+<view class="bottom-bar" wx:if="{{!loading && !error}}">
+  <view class="bar-row">
+    <view class="btn btn--ghost grow" bindtap="goSelect">改我的空闲</view>
+    <button class="btn btn--primary grow bar-btn-right" open-type="share">分享结果</button>
+  </view>
+</view>
+</view>

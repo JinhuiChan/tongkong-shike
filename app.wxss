@@ -1,0 +1,310 @@
+/* ---------- 设计基础 ---------- */
+page {
+  --ink: #1a202e;
+  --ink-2: #5d6678;
+  --ink-3: #9aa2b1;
+  --line: #eceef3;
+  --bg: #fafafb;
+  --brand: #4f46e5;
+  --brand-dark: #4338ca;
+  --brand-soft: #eef0ff;
+  --ok: #12a06a;
+  --ok-soft: #e8f7f0;
+  --warn: #d92d20;
+  --warn-strong: #b42318;
+  --warn-soft: #fff1f0;
+  --surface: #ffffff;
+  --surface-2: #f6f7fa;
+  --surface-3: #f1f2f6;
+  --surface-hover: #fbfbfd;
+  --border-soft: #f5f6f9;
+  --line-strong: #e3e7f0;
+  --cal-head: rgba(255, 255, 255, 0.98);
+  --bar-bg: rgba(255, 255, 255, 0.96);
+  --shadow: 0 4rpx 24rpx rgba(17, 24, 39, 0.05);
+
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 28rpx;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 深色主题：由 utils/theme.js 在页面根节点切换 */
+.theme-dark {
+  --ink: #f2f4f8;
+  --ink-2: #c2c9d6;
+  --ink-3: #8f99ab;
+  --line: #29303d;
+  --bg: #11151f;
+  --brand: #7c7cff;
+  --brand-dark: #6b68f2;
+  --brand-soft: #25284b;
+  --ok: #4bd99b;
+  --ok-soft: #15382d;
+  --warn: #ff8177;
+  --warn-strong: #ffb2ab;
+  --warn-soft: #3c1f22;
+  --surface: #191e2a;
+  --surface-2: #212735;
+  --surface-3: #293040;
+  --surface-hover: #252c3a;
+  --border-soft: #232a37;
+  --line-strong: #3a4354;
+  --cal-head: rgba(25, 30, 42, 0.98);
+  --bar-bg: rgba(17, 21, 31, 0.96);
+  --shadow: 0 6rpx 26rpx rgba(0, 0, 0, 0.3);
+
+  background: var(--bg);
+  color: var(--ink);
+}
+
+view, text, input, button, scroll-view {
+  box-sizing: border-box;
+}
+
+.theme-root {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.page {
+  min-height: 100vh;
+  padding: 40rpx 32rpx 64rpx;
+}
+
+.page--with-bar {
+  padding-bottom: 220rpx;
+}
+
+/* ---------- 卡片 ---------- */
+.card {
+  background: var(--surface);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: var(--shadow);
+}
+
+.card + .card {
+  margin-top: 24rpx;
+}
+
+/* ---------- 文字层级 ---------- */
+.title-lg {
+  font-size: 52rpx;
+  font-weight: 700;
+  letter-spacing: -1rpx;
+  line-height: 1.25;
+}
+
+.title-md {
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.label {
+  font-size: 24rpx;
+  color: var(--ink-3);
+  letter-spacing: 0.5rpx;
+}
+
+.muted {
+  color: var(--ink-2);
+}
+
+.faint {
+  color: var(--ink-3);
+  font-size: 24rpx;
+}
+
+/* ---------- 按钮 ---------- */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100rpx;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 0.5rpx;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.btn:active {
+  transform: scale(0.985);
+  opacity: 0.9;
+}
+
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+}
+
+.btn--ghost {
+  background: var(--surface-3);
+  color: var(--ink);
+}
+
+.btn--soft {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.btn--disabled {
+  background: var(--surface-3);
+  color: var(--ink-3);
+}
+
+.btn--sm {
+  height: 72rpx;
+  font-size: 26rpx;
+  border-radius: 16rpx;
+}
+
+.btn[disabled] {
+  background: var(--surface-3) !important;
+  color: var(--ink-3) !important;
+}
+
+button.btn {
+  padding: 0;
+  margin: 0;
+  border: none;
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: normal;
+  font-family: inherit;
+}
+
+button.btn::after {
+  border: none;
+}
+
+/* ---------- 布局 ---------- */
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.row--between {
+  justify-content: space-between;
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.gap-8 { height: 8rpx; }
+.gap-12 { height: 12rpx; }
+.gap-16 { height: 16rpx; }
+.gap-24 { height: 24rpx; }
+.gap-32 { height: 32rpx; }
+
+/* ---------- 底部固定操作栏 ---------- */
+.bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: var(--bar-bg);
+  border-top: 2rpx solid var(--line);
+  z-index: 50;
+  backdrop-filter: blur(12rpx);
+}
+
+/* ---------- 空态 / 加载 ---------- */
+.empty {
+  padding: 72rpx 32rpx;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+.loading {
+  padding: 120rpx 0;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 26rpx;
+}
+
+/* ---------- 弹层 ---------- */
+.mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 22, 36, 0.45);
+  z-index: 100;
+}
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 101;
+  background: var(--surface);
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 32rpx 32rpx calc(32rpx + env(safe-area-inset-bottom));
+}
+
+.sheet__handle {
+  width: 72rpx;
+  height: 8rpx;
+  border-radius: 8rpx;
+  background: var(--line-strong);
+  margin: 0 auto 28rpx;
+}
+
+/* ---------- 输入 ---------- */
+.field {
+  height: 100rpx;
+  background: var(--surface-2);
+  border-radius: 16rpx;
+  padding: 0 28rpx;
+  font-size: 30rpx;
+  color: var(--ink);
+}
+
+.field--code {
+  font-size: 40rpx;
+  font-weight: 700;
+  letter-spacing: 12rpx;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 危险操作 / 表单提示 ---------- */
+.btn--danger {
+  background: var(--warn);
+  color: #fff;
+}
+
+.danger-note {
+  font-size: 26rpx;
+  line-height: 1.65;
+  color: var(--warn-strong);
+  background: var(--warn-soft);
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+}
+
+.sheet__dismiss {
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--ink-3);
+  padding: 28rpx 0 4rpx;
+}
+
+.form-error {
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: var(--warn-strong);
+  background: var(--warn-soft);
+  border-radius: 12rpx;
+  padding: 18rpx 20rpx;
+  margin-top: 20rpx;
+}

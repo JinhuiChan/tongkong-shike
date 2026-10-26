@@ -1,0 +1,137 @@
+<view class="theme-root {{themeClass}}">
+<view class="page page--with-bar">
+  <view wx:if="{{loading}}" class="loading">正在进入…</view>
+
+  <view wx:elif="{{error}}" class="error-state">
+    <view class="error-state__text">{{error}}</view>
+    <view class="gap-32"></view>
+    <view class="btn btn--ghost" bindtap="retry">重试</view>
+  </view>
+
+  <block wx:else>
+    <view class="room-head">
+      <view class="row row--between">
+        <text class="label">{{room.rangeText}} · 共 {{room.dayCount}} 天</text>
+        <text class="head-link" bindtap="goHome">我的局</text>
+      </view>
+
+      <view class="title-row">
+        <view class="room-title grow">{{room.title}}</view>
+        <view wx:if="{{isOwner}}" class="rename-btn" bindtap="openRename">改名</view>
+      </view>
+
+      <view class="code-card" bindtap="copyCode">
+        <view class="code-card__label">房号</view>
+        <view class="code-card__value">{{room.code}}</view>
+        <view class="code-card__hint">点一下复制，发给群里</view>
+      </view>
+
+      <button class="share-cta" open-type="share">
+        <view class="share-cta__text">
+          <view class="share-cta__main">分享给群，叫大家来填</view>
+          <view class="share-cta__sub">点一下发到微信群，进来就能勾时间</view>
+        </view>
+        <view class="share-cta__arrow">›</view>
+      </button>
+    </view>
+
+    <view class="card">
+      <view class="row row--between">
+        <text class="title-md">填写进度</text>
+        <text class="faint">{{filledCount}}/{{members.length}} 人已填</text>
+      </view>
+
+      <view class="progress">
+        <view class="progress__bar" style="width: {{progressPercent}}%"></view>
+      </view>
+
+      <view wx:if="{{members.length === 0}}" class="empty" bindtap="refreshMembers">
+        {{memberError ? '成员加载失败，点这里重试' : '还没有人进来'}}
+      </view>
+
+      <view class="member-error" wx:if="{{memberError && members.length > 0}}" bindtap="refreshMembers">
+        名单同步失败，点这里重试
+      </view>
+
+      <view class="member" wx:for="{{members}}" wx:key="id">
+        <view class="avatar" style="background:{{item.color}}">{{item.initial}}</view>
+        <view class="member__name grow">
+          {{item.nickname}}<text wx:if="{{item.isMe}}" class="me-tag">我</text>
+        </view>
+        <text class="member__status {{item.filled ? 'is-filled' : ''}}">{{item.statusText}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{isOwner}}" class="danger-zone">
+      <view class="danger-link" bindtap="confirmDelete">删除这个局</view>
+    </view>
+  </block>
+</view>
+
+<view class="bottom-bar" wx:if="{{!loading && !error}}">
+  <view wx:if="{{!isMember}}" class="btn btn--primary" bindtap="askJoin">加入这个局</view>
+  <view wx:else class="bar-row">
+    <view class="btn btn--ghost grow" bindtap="goResult">看共同空闲</view>
+    <view class="btn btn--primary grow bar-btn-right" bindtap="goSelect">填我的空闲</view>
+  </view>
+</view>
+
+<!-- 首次进入需要昵称 -->
+<view wx:if="{{needNickname}}" class="mask"></view>
+<view wx:if="{{needNickname}}" class="sheet" catchtap="noop">
+  <view class="sheet__handle"></view>
+  <view class="title-md">你在这个局里叫什么</view>
+  <view class="gap-8"></view>
+  <view class="faint">填完就能勾自己的空闲时间了。</view>
+  <view class="gap-24"></view>
+  <input
+    class="field"
+    type="nickname"
+    value="{{nicknameInput}}"
+    placeholder="群里认得出的名字"
+    maxlength="12"
+    bindinput="onNicknameInput"
+  />
+  <view class="gap-32"></view>
+  <view class="btn btn--primary" bindtap="submitNickname">
+    {{submitting ? '加入中…' : '进入这个局'}}
+  </view>
+  <view class="sheet__dismiss" bindtap="dismissJoin">稍后再说</view>
+</view>
+
+<!-- 改名 -->
+<view wx:if="{{renaming}}" class="mask" bindtap="closeRename"></view>
+<view wx:if="{{renaming}}" class="sheet" catchtap="noop">
+  <view class="sheet__handle"></view>
+  <view class="title-md">改个名字</view>
+  <view class="gap-8"></view>
+  <view class="faint">房间里所有人都会看到这个新名字。</view>
+  <view class="gap-24"></view>
+  <input
+    class="field"
+    value="{{renameInput}}"
+    placeholder="例：开题讨论、周末爬山"
+    maxlength="20"
+    bindinput="onRenameInput"
+  />
+  <view wx:if="{{renameError}}" class="form-error">{{renameError}}</view>
+  <view class="gap-32"></view>
+  <view class="btn btn--primary {{submitting ? 'btn--disabled' : ''}}" bindtap="submitRename">
+    {{submitting ? '保存中…' : '保存'}}
+  </view>
+</view>
+
+<!-- 删除确认 -->
+<view wx:if="{{confirmingDelete}}" class="mask" bindtap="closeDelete"></view>
+<view wx:if="{{confirmingDelete}}" class="sheet" catchtap="noop">
+  <view class="sheet__handle"></view>
+  <view class="title-md">删除「{{room.title}}」？</view>
+  <view class="gap-12"></view>
+  <view class="danger-note">房间里所有人的填写记录都会一起消失，且无法恢复。</view>
+  <view class="gap-32"></view>
+  <view class="btn btn--danger {{deleting ? 'btn--disabled' : ''}}" bindtap="doDelete">
+    {{deleting ? '删除中…' : '确认删除'}}
+  </view>
+  <view class="sheet__dismiss" bindtap="closeDelete">取消</view>
+</view>
+</view>

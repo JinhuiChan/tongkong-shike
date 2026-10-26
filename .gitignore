@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Local tooling and OS files
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+
+# WeChat local settings
+project.private.config.json
+
+# Build and export artifacts
+*.zip
+*.genie
+.wbapp_*.privacy.json

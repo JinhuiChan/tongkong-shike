@@ -1,0 +1,195 @@
+<view class="theme-root {{themeClass}}">
+<view class="page">
+  <view class="hero">
+    <view class="hero__top">
+      <view class="hero__title">找共同空闲</view>
+      <view class="theme-toggle" bindtap="toggleTheme">{{nightMode ? '日间' : '夜间'}}</view>
+    </view>
+    <view class="hero__desc">每个人勾一下自己有空的时间，马上看出哪天能凑齐。</view>
+    <view class="hero__meta">15 分钟一格 · 最多 14 天</view>
+  </view>
+
+  <view wx:if="{{previewMode}}" class="preview-note">
+    <view class="preview-note__title">现在只是界面预览</view>
+    <view class="preview-note__desc">微信登录必须在小程序里运行。点右上角「分享 / Share」发布后，用微信扫码打开就能真正创建和加入。</view>
+  </view>
+
+  <view wx:if="{{loginError}}" class="alert">
+    <view class="alert__text">{{loginError}}</view>
+    <view class="alert__action" bindtap="retryLogin">重试</view>
+  </view>
+
+  <view class="actions">
+    <view class="action-card action-card--primary" bindtap="openCreate">
+      <view class="action-card__icon">＋</view>
+      <view class="action-card__text">
+        <view class="action-card__title">创建一个时间局</view>
+        <view class="action-card__desc">选几个日子，发到群里一起填</view>
+      </view>
+      <view class="action-card__arrow">›</view>
+    </view>
+
+    <view class="action-card action-card--secondary" bindtap="openJoin">
+      <view class="action-card__icon">#</view>
+      <view class="action-card__text">
+        <view class="action-card__title">用房号加入</view>
+        <view class="action-card__desc">别人发你的 6 位数字</view>
+      </view>
+      <view class="action-card__arrow">›</view>
+    </view>
+  </view>
+
+  <view class="section-head">
+    <text class="section-head__title">我参与的</text>
+    <text class="section-head__hint">左滑可删除</text>
+  </view>
+
+  <view wx:if="{{loadingRooms}}" class="loading">正在加载…</view>
+
+  <view wx:elif="{{myRooms.length === 0}}" class="empty-card">
+    <view class="empty-card__title">还没有参与任何时间局</view>
+    <view class="empty-card__desc">创建一个，把房号发到群里，大家填完就能看到共同空闲。</view>
+  </view>
+
+  <view wx:else>
+    <view class="room-row" wx:for="{{myRooms}}" wx:key="id">
+      <view
+        wx:if="{{item.canSwipe}}"
+        class="room-delete"
+        data-id="{{item.id}}"
+        catchtap="askDelete"
+      >删除</view>
+      <view
+        class="room-item"
+        style="transform: translateX({{item.offset}}px);{{item.animating ? 'transition: transform 0.2s ease;' : ''}}"
+        data-index="{{index}}"
+        data-id="{{item.id}}"
+        bindtouchstart="onRowTouchStart"
+        bindtouchmove="onRowTouchMove"
+        bindtouchend="onRowTouchEnd"
+        bindtouchcancel="onRowTouchCancel"
+        bindtap="openRoom"
+      >
+        <view class="room-item__main">
+          <view class="room-item__title">{{item.title}}</view>
+          <view class="room-item__meta">{{item.dayText}} · 房号 {{item.code}}</view>
+        </view>
+        <view class="room-item__status {{item.filled ? 'is-filled' : ''}}">{{item.slotText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="build-stamp">{{buildStamp}}</view>
+</view>
+
+<!-- 创建 -->
+<view wx:if="{{creating}}" class="mask" bindtap="closeSheet"></view>
+<view wx:if="{{creating}}" class="sheet" catchtap="noop">
+  <view class="sheet__handle"></view>
+  <view class="title-md">创建时间局</view>
+  <view class="gap-24"></view>
+
+  <view class="label">你的昵称</view>
+  <view class="gap-8"></view>
+  <input
+    class="field"
+    type="nickname"
+    value="{{formNickname}}"
+    placeholder="群里认得出的名字"
+    maxlength="12"
+    bindinput="onFormNickname"
+  />
+
+  <view class="gap-24"></view>
+  <view class="label">这个局叫什么</view>
+  <view class="gap-8"></view>
+  <input
+    class="field"
+    value="{{titleInput}}"
+    placeholder="例：开题讨论、周末爬山"
+    maxlength="20"
+    bindinput="onTitleInput"
+  />
+
+  <view class="gap-24"></view>
+  <view class="label">选哪几天</view>
+  <view class="row row--between date-range">
+    <text wx:if="{{pickedCount === 0}}" class="date-range__warn">还没选日期</text>
+    <text wx:else>已选 {{pickedCount}} 天，每天 15 分钟一格</text>
+    <view class="date-links">
+      <text class="date-link" bindtap="selectAllDates">全选</text>
+      <text class="date-link" bindtap="clearDates">清空</text>
+    </view>
+  </view>
+  <view class="gap-12"></view>
+  <scroll-view class="date-strip" scroll-x show-scrollbar="{{true}}">
+    <view
+      class="date-chip {{item.checked ? 'is-active' : ''}}"
+      wx:for="{{candidateDates}}"
+      wx:key="value"
+      data-index="{{index}}"
+      bindtap="toggleDate"
+    >
+      <view class="date-chip__week">{{item.weekday}}</view>
+      <view class="date-chip__num">{{item.label}}</view>
+    </view>
+  </scroll-view>
+
+  <view class="gap-32"></view>
+  <view wx:if="{{formError}}" class="form-error">{{formError}}</view>
+  <view class="btn btn--primary {{(submitting || pickedCount === 0) ? 'btn--disabled' : ''}}" bindtap="submitCreate">
+    {{submitting ? '创建中…' : (pickedCount === 0 ? '先选日期' : '创建并进入')}}
+  </view>
+</view>
+
+<!-- 加入 -->
+<view wx:if="{{joining}}" class="mask" bindtap="closeSheet"></view>
+<view wx:if="{{joining}}" class="sheet" catchtap="noop">
+  <view class="sheet__handle"></view>
+  <view class="title-md">加入时间局</view>
+  <view class="gap-24"></view>
+
+  <view class="label">你的昵称</view>
+  <view class="gap-8"></view>
+  <input
+    class="field"
+    type="nickname"
+    value="{{formNickname}}"
+    placeholder="群里认得出的名字"
+    maxlength="12"
+    bindinput="onFormNickname"
+  />
+
+  <view class="gap-24"></view>
+  <view class="label">6 位房号</view>
+  <view class="gap-8"></view>
+  <input
+    class="field field--code"
+    type="number"
+    value="{{codeInput}}"
+    placeholder="000000"
+    maxlength="6"
+    bindinput="onCodeInput"
+  />
+
+  <view class="gap-32"></view>
+  <view wx:if="{{formError}}" class="form-error">{{formError}}</view>
+  <view class="btn btn--primary {{submitting ? 'btn--disabled' : ''}}" bindtap="submitJoin">
+    {{submitting ? '加入中…' : '加入'}}
+  </view>
+</view>
+
+<!-- 删除确认 -->
+<view wx:if="{{confirmingDelete}}" class="mask" bindtap="closeDelete"></view>
+<view wx:if="{{confirmingDelete}}" class="sheet" catchtap="noop">
+  <view class="sheet__handle"></view>
+  <view class="title-md">删除「{{deletingRoom.title}}」？</view>
+  <view class="gap-12"></view>
+  <view class="danger-note">房间里所有人的填写记录都会一起消失，且无法恢复。</view>
+  <view class="gap-32"></view>
+  <view class="btn btn--danger {{deleting ? 'btn--disabled' : ''}}" bindtap="doDelete">
+    {{deleting ? '删除中…' : '确认删除'}}
+  </view>
+  <view class="sheet__dismiss" bindtap="closeDelete">取消</view>
+</view>
+</view>

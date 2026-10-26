@@ -1,0 +1,9 @@
+{
+  "name": "tongkong-shike",
+  "version": "1.0.0",
+  "description": "多人共同空闲时间统计小程序",
+  "private": true,
+  "dependencies": {
+    "@tencent-ai/workbuddy-cloud-sdk": "dev"
+  }
+}

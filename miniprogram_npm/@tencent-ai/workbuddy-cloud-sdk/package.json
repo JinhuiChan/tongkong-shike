@@ -1,0 +1,6 @@
+{
+  "name": "@tencent-ai/workbuddy-cloud-sdk",
+  "version": "0.1.4",
+  "description": "WorkBuddy Cloud SDK - miniprogram CommonJS build",
+  "main": "index.js"
+}

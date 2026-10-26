@@ -1,0 +1,28 @@
+{
+  "miniprogramRoot": "./",
+  "compileType": "miniprogram",
+  "appid": "touristappid",
+  "projectname": "tongkong-shike",
+  "description": "多人共同空闲时间统计",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "coverView": true,
+    "nodeModules": true,
+    "packNpmManually": false,
+    "packNpmRelationList": []
+  },
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "node_modules" },
+      { "type": "folder", "value": "tests" },
+      { "type": "file", "value": "package-lock.json" }
+    ],
+    "include": []
+  },
+  "libVersion": "3.5.5",
+  "condition": {}
+}
